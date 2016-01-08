@@ -12,16 +12,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'TicTacToe'))
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
 
-install_requires = ['requests==2.7.0', 'lxml==3.4.4']
+install_requires = ['funcy==1.6','rome==0.0.3']
 
 setup(
     name='TicTacToe',
-    version='0.0.1',
+    version='0.0.2',
     description='TicTacToe',
     author='Erik Dominguez',
     author_email='erik.dominguez1003@gmail.com',
-    packages=['tictactoe','tictactoe.hash'],
+    packages=['tictactoe','tictactoe.hash','tictactoe.hash.line'],
     include_package_data=True,
+    zip_safe=False,
     install_requires=install_requires,
     test_suite='test'
 )

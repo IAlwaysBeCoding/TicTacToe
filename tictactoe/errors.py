@@ -39,3 +39,5 @@ class InvalidBinaryMode(TicTacToeException):
 class InvalidHashMode(TicTacToeException):
     pass
 
+class InvalidLine(TicTacToeException):
+    pass

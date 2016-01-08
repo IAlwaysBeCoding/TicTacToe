@@ -1,23 +1,53 @@
 
+import weakref
+
 from tictactoe.errors    import InvalidHash, InvalidCell
-from tictactoe.hash.hash import Hashable
-from tictactoe.settings  import FREE_SPACE
+from tictactoe.hash      import Hashable
+from tictactoe.settings  import (FREE_SPACE, GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW,
+                                 TTT_5_IN_A_ROW)
 from tictactoe.utils     import verify_player, verify_cell, verify_binary, compute_hash
+
+
+def create_new_cell(cell_cls,number,player):
+
+    cell = Hashable.__new__(cell_cls)
+    cell._number = number
+    cell._player = player
+    cell._hash   = None
+    cell._binary = None
+
+    return cell
+
+
+def create_and_verify_cell(number,player,cell_class):
+
+    verify_player(player=player)
+    verify_cell(cell=number,mode=cell_class.MODE)
+
+    ref_key = '{}-{}'.format(number,player)
+    cell = cell_class._Refs.get(ref_key,None)
+
+    if cell is None:
+        cell = create_new_cell(cell_cls=cell_class,number=number,player=player)
+        cell_class._Refs[ref_key] = cell
+        cell_class._Hashes[cell.hash] = cell_class._Refs[ref_key]
+
+    return cell
 
 
 class Cell(Hashable):
 
-    def __init__(self,number,player=FREE_SPACE):
 
-        verify_player(player=player)
-        verify_cell(cell=number)
+    _Refs   = weakref.WeakValueDictionary()
+    _Hashes = weakref.WeakValueDictionary()
 
-        self._number = number
-        self._player = player
+    MODE   = TTT_3_IN_A_ROW
 
-        self._hash = None
-        self._binary = None
+    def __new__(cls,number,player=FREE_SPACE):
 
+        return create_and_verify_cell(number=number,
+                                      player=player,
+                                      cell_class=cls)
     @staticmethod
     def decompose_binary(index):
         return ((index / 3) + 1, index % 3)
@@ -32,8 +62,7 @@ class Cell(Hashable):
     @classmethod
     def from_binary(cls,binary):
 
-        verify_binary(binary=binary)
-
+        verify_binary(binary=binary,mode=GAME_MODES[cls.MODE]['GRID_STATE'])
         if isinstance(binary,(list,tuple)):
             binary = "".join([str(n) for n in binary])
 
@@ -47,22 +76,27 @@ class Cell(Hashable):
 
     @classmethod
     def from_hash(cls,hash):
-        if not isinstance(hash,int):
+        if not isinstance(hash,(long,int)):
             raise InvalidHash('A {} type was passed to hash. Only '
-                              'an int type is acceptable'.format(type(hash)))
+                              'an long or an int type is acceptable'.format(type(hash)))
 
-        binary = "".join([b for b in reversed(bin(hash)[2:].zfill(27))])
+        previous_cell = cls._Hashes.get(hash,None)
+        if previous_cell:
+            return previous_cell
+        else:
+            binary = "".join([b for b in reversed(bin(hash)[2:].zfill(27))])
 
-        cls.validate_binary(binary=binary)
-        cell, player = cls.decompose_binary(index=binary.index('1'))
+            cls.validate_binary(binary=binary)
+            cell, player = cls.decompose_binary(index=binary.index('1'))
 
-        return cls(number=cell,player=player)
+            return cls(number=cell,player=player)
 
     @property
     def hash(self):
         if self._hash is None:
             self._hash = compute_hash(cell=self.number,
-                                      player=self.player)
+                                      player=self.player,
+                                      mode=self.MODE)
 
         return self._hash
 
@@ -96,5 +130,33 @@ class Cell(Hashable):
     @player.setter
     def player(self,value):
         pass
+
+
+class Cell4(Cell):
+
+    _Refs   = weakref.WeakValueDictionary()
+    _Hashes = weakref.WeakValueDictionary()
+
+    MODE   = TTT_4_IN_A_ROW
+
+    def __new__(cls,number,player=FREE_SPACE):
+
+        return create_and_verify_cell(number=number,
+                                      player=player,
+                                      cell_class=cls)
+
+class Cell5(Cell):
+
+    _Refs   = weakref.WeakValueDictionary()
+    _Hashes = weakref.WeakValueDictionary()
+
+    MODE   = TTT_5_IN_A_ROW
+
+    def __new__(cls,number,player=FREE_SPACE):
+
+        return create_and_verify_cell(number=number,
+                                      player=player,
+                                      cell_class=cls)
+
 
 

@@ -2,42 +2,44 @@
 
 from tictactoe.errors     import (InvalidHash, InvalidGrid, InvalidMove,
                                   IncompatibleGrid, CellIsTaken)
-from tictactoe.hash.hash  import Hashable
-from tictactoe.hash.cell  import Cell
-from tictactoe.hash.move  import Move
-from tictactoe.hash.state import GridState
-from tictactoe.settings   import FREE_SPACE, PLAYER_1, PLAYER_2
-from tictactoe.utils      import (compute_hash, compute_all_hash_moves,
-                                 verify_cell, verify_player, verify_grid,
-                                 verify_binary, verify_hash, new_game_hash,
-                                 decompose_grid_hash)
-
-
-HASHES = [compute_all_hash_moves(player=p) for p in (FREE_SPACE, PLAYER_1, PLAYER_2)]
-
-HASH_MAP = dict([ (hash, (player, cell+1))
-                 for player, hash_list in enumerate(HASHES)
-                 for cell, hash        in enumerate(hash_list) ])
+from tictactoe.hash       import Hashable, CELL_HASH_MAP
+from tictactoe.hash.cell  import Cell, Cell4, Cell5
+from tictactoe.hash.move  import Move, Move4, Move5
+from tictactoe.hash.state import GridState, GridState4, GridState5
+from tictactoe.settings   import (FREE_SPACE, PLAYER_1, PLAYER_2, GAME_MODES,
+                                 TTT_3_IN_A_ROW, TTT_4_IN_A_ROW, TTT_5_IN_A_ROW)
+from tictactoe.utils      import (compute_hash, verify_cell, verify_player,
+                                  verify_grid, verify_binary, verify_hash,
+                                  new_game_hash, decompose_grid_hash)
 
 
 class Grid(Hashable):
 
+    MODE = TTT_3_IN_A_ROW
+
+    GRID_STATE_KLASS = GridState
+
+    CELL_KLASS = Cell
+
+    MOVE_KLASS = Move
+
     def __init__(self,hash=None):
 
         if hash is None:
-            hash = new_game_hash(sum_cells=True)
+            hash = new_game_hash(sum_cells=True,mode=self.MODE)
 
-        verify_hash(hash=hash)
+        verify_hash(hash=hash,mode=GAME_MODES[self.MODE]['GRID'])
 
         self._hash  = hash
         self._binary = None
-        self._hash_map = HASH_MAP
-        self._cells = [Cell.from_hash(hash=h) for h in decompose_grid_hash(hash=self._hash)]
+        self._hash_map = CELL_HASH_MAP
+        self._cells = [self.CELL_KLASS.from_hash(hash=h)
+                       for h in decompose_grid_hash(hash=self._hash,mode=self.MODE)]
 
         state_hash = sum([ ( 1 << n) for n, c in enumerate(self._cells)
-                        if (c.player == 1 or c.player == 2)])
+                        if (c.player == PLAYER_1 or c.player == PLAYER_2)])
 
-        self._state = GridState(hash=state_hash)
+        self._state = self.GRID_STATE_KLASS(hash=state_hash)
         self.validate_grid()
 
     def __getitem__(self,cell):
@@ -60,13 +62,13 @@ class Grid(Hashable):
 
     @classmethod
     def from_binary(cls,binary):
-        verify_binary(binary)
+        verify_binary(binary,mode=GAME_MODES[cls.MODE]['GRID'])
         return cls(hash=int(binary, 2))
 
     @classmethod
     def from_array(cls,array):
-        verify_grid(array)
-        grid_hash = sum([compute_hash(cell=c+1,player=p) for c,p in enumerate(array)])
+        verify_grid(array,mode=cls.MODE)
+        grid_hash = sum([compute_hash(cell=c+1,player=p,mode=cls.MODE) for c,p in enumerate(array)])
 
         return cls(hash=grid_hash)
 
@@ -108,7 +110,7 @@ class Grid(Hashable):
 
     def get_cell(self,number):
 
-        verify_cell(cell=number)
+        verify_cell(cell=number,mode=self.MODE)
         return self._cells[number-1]
 
     def look_up_hash(self,hash):
@@ -122,7 +124,7 @@ class Grid(Hashable):
                 'cell number and player was passed to Grid.'.format(hash))
 
         else:
-            return Cell(number=cell, player=player)
+            return self.CELL_KLASS(number=cell, player=player)
 
     def validate_grid(self):
 
@@ -146,7 +148,7 @@ class Grid(Hashable):
                 'instance was passed.Cannot apply Grid'.format(type(grid)))
 
         applied_hash = self.hash | grid.hash
-        applied_grid = [Cell.from_hash(hash=h) for h in decompose_grid_hash(hash=applied_hash)]
+        applied_grid = [Cell.from_hash(hash=h) for h in decompose_grid_hash(hash=applied_hash,mode=self.MODE)]
 
         for c in applied_grid:
 
@@ -163,11 +165,11 @@ class Grid(Hashable):
                     'New grid cannot go backwards in moves. Must provide all the '\
                     'previous moves plus 1 or more moves.')
 
-        return self if applied_hash == self.hash else Grid(hash=applied_hash)
+        return self if applied_hash == self.hash else self.GRID_KLASS(hash=applied_hash)
 
     def apply_move(self,move):
 
-        if not isinstance(move,Move):
+        if not isinstance(move,self.MOVE_KLASS):
             raise InvalidMove(
                 'move is not a valid Move instance. Instead a {}' \
                 'instance was passed.Cannot apply Move'.format(type(move)))
@@ -186,6 +188,27 @@ class Grid(Hashable):
             cells = [c for c in self._cells]
             cells[move.number-1] = move
 
-            return Grid(hash=sum([c.hash for c in cells]))
+            return type(self)(hash=sum([c.hash for c in cells]))
 
+
+
+class Grid4(Grid):
+
+    MODE = TTT_4_IN_A_ROW
+
+    GRID_STATE_KLASS = GridState4
+
+    CELL_KLASS = Cell4
+
+    MOVE_KLASS = Move4
+
+class Grid5(Grid):
+
+    MODE = TTT_5_IN_A_ROW
+
+    GRID_STATE_KLASS = GridState5
+
+    CELL_KLASS = Cell5
+
+    MOVE_KLASS = Move5
 
