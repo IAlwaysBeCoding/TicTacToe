@@ -3,14 +3,13 @@ from itertools import chain
 
 from rome import Roman
 
-from tictactoe.compute         import player_combinations
-from tictactoe.errors          import TicTacToeException
-from tictactoe.hash.line       import PLAYER_MAP, generate_player_keys, generate_combinations
-from tictactoe.hash.line.state import LineState
-from tictactoe.settings        import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
-                                      TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
-from tictactoe.verification    import verify_player, verify_real_player, verify_game_mode
-
+from tictactoe.compute      import player_combinations
+from tictactoe.errors       import TicTacToeLineException
+from tictactoe.line         import PLAYER_MAP, generate_player_keys, generate_combinations
+from tictactoe.line.state   import LineState
+from tictactoe.settings     import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
+                                    TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
+from tictactoe.verification import verify_player, verify_real_player, verify_game_mode
 
 
 class LineStateGenerator(object):
@@ -44,13 +43,13 @@ class LineStateGenerator(object):
                 continue
 
             if not isinstance(player,int):
-                raise TicTacToeException(
+                raise TicTacToeLineException(
                     'Invalid type:{} for {}.An int must be passed'.format(type(player),
                                                                           PLAYERS[player]))
 
         length = sum([int(player_0), int(player_1) ,int(player_2)])
         if length != self._length:
-            raise TicTacToeException(
+            raise TicTacToeLineException(
                 'Current line length: {}. Line length must be :{}'.format(length,self._length))
 
         return '{}:{}/{}:{}/{}:{}'.format(

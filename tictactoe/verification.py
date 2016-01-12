@@ -49,7 +49,6 @@ def verify_cell(cell,mode=TTT_3_IN_A_ROW):
 
     else:
         max_cells = MODES[mode]['length']
-
         if cell < 1 or cell > max_cells:
             raise TicTacToeException(
                 'Cell needs to a number between 1-{}'.format(max_cells))

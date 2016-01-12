@@ -20,7 +20,7 @@ setup(
     description='TicTacToe',
     author='Erik Dominguez',
     author_email='erik.dominguez1003@gmail.com',
-    packages=['tictactoe','tictactoe.hash','tictactoe.hash.line'],
+    packages=['tictactoe','tictactoe.hash','tictactoe.line'],
     include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,

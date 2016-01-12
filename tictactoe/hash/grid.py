@@ -54,12 +54,10 @@ class Grid(Hashable):
     MOVE_KLASS = Move
 
     def __init__(self,hash=None):
-
         if hash is None:
             hash = new_game_hash(sum_cells=True,mode=self.MODE)
 
         verify_hash(hash=hash,mode=GAME_MODES[self.MODE]['GRID'])
-
         self._hash  = hash
         self._binary = None
         self._hash_map = CELL_HASH_TABLE[self.MODE]
@@ -157,7 +155,6 @@ class Grid(Hashable):
             return self.CELL_KLASS(number=cell, player=player)
 
     def validate_grid(self):
-
         total_taken = self.total_taken_cells()
 
         if total_taken != 0:

@@ -14,3 +14,7 @@ class IncompatibleGrid(TicTacToeGridException):
 class CellIsTaken(TicTacToeGridException):
     pass
 
+class TicTacToeLineException(TicTacToeException):
+    pass
+
+
