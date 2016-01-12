@@ -1,4 +1,5 @@
 
+from itertools import chain
 
 from rome import Roman
 
@@ -52,7 +53,8 @@ class LineStateGenerator(object):
             raise TicTacToeException(
                 'Current line length: {}. Line length must be :{}'.format(length,self._length))
 
-        return '{}:{}/{}:{}/{}:{}'.format(MARKS[FREE_SPACE],
+        return '{}:{}/{}:{}/{}:{}'.format(
+                                     MARKS[FREE_SPACE],
                                      Roman(player_0) if int(player_0) != 0 else '',
                                      MARKS[PLAYER_1],
                                      Roman(player_1) if int(player_1) != 0 else '',
@@ -73,6 +75,24 @@ class LineStateGenerator(object):
         players[PLAYER_MAP[player]] = self.length
 
         return self.create_line_state(**players)
+
+    def all_states(self):
+
+        players = (FREE_SPACE, PLAYER_1, PLAYER_2)
+        real_players = (PLAYER_1, PLAYER_2)
+
+        full_line_states = [self.full_line_state(player=p) for p in players]
+
+        non_blocked_lines = [self.non_blocked_states(player=p) for p in real_players]
+        non_blocked_states= list(chain.from_iterable(non_blocked_lines))
+
+        p1_blocked = self.blocked_states(player=PLAYER_1)
+        p2_blocked = self.blocked_states(player=PLAYER_2)
+        unique_blocked_states = set(p1_blocked).union(p2_blocked)
+
+        return list(chain.from_iterable([full_line_states,
+                                         non_blocked_states,
+                                         unique_blocked_states]))
 
     def non_blocked_states(self,player):
         verify_real_player(player=player)
@@ -110,4 +130,5 @@ class LineStateGenerator(object):
                     lines.append(self.create_line_state(*raw_combination))
 
         return lines
+
 

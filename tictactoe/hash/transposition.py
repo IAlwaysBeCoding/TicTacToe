@@ -2,6 +2,7 @@
 from tictactoe.errors import TicTacToeException
 from tictactoe.hash   import Hashable
 
+
 class HashTable(object):
 
     def __init__(self,table={}):

@@ -22,6 +22,27 @@ class LineState(object):
 
         return 'LineState(name="{}",length={})'.format(self.name,self.length)
 
+    def __eq__(self,state):
+
+        if not isinstance(state,LineState):
+            return False
+
+        return (self.player_0 == state.player_0) and \
+               (self.player_1 == state.player_1) and \
+               (self.player_2 == state.player_2)
+
+
+    def __hash__(self):
+
+        bits_to_push = lambda c : ((c+1) * 3) - 3
+        bits = lambda t,p : 1 << p + bits_to_push(t)
+
+        players = [(self.player_0,FREE_SPACE),
+                   (self.player_1,PLAYER_1),
+                   (self.player_2, PLAYER_2)]
+
+        return sum([bits(p[0],p[1]) for p in players])
+
     @property
     def name(self):
         return self._name

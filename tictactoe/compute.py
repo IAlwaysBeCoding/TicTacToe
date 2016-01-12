@@ -64,7 +64,10 @@ def compute_all_hash_moves(player,mode=TTT_3_IN_A_ROW):
     length = MODES[key(m=mode)]['length'] + 1
     return [compute_hash(cell=c, player=player,mode=mode) for c in xrange(1, length, 1)]
 
-def get_all_possible_lines():
+def get_all_possible_lines(mode=TTT_3_IN_A_ROW):
+
+    key = lambda m : GAME_MODES[m]['GRID_STATE']
+    length = MODES[key(m=mode)]['length'] + 1
 
     horizontal = [tuple(y for y in xrange(x, 10, 3)) for x in xrange(1, 4)]
     vertical   = [tuple(y for y in xrange(x, x+3, 1)) for x in xrange(1, 10, 3)]
@@ -76,5 +79,6 @@ def new_game_hash(sum_cells=False,mode=TTT_3_IN_A_ROW):
 
     grid = compute_all_hash_moves(player=FREE_SPACE,mode=mode)
     return sum(grid) if sum_cells else grid
+
 
 
