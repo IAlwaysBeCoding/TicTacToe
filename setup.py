@@ -16,7 +16,7 @@ install_requires = ['funcy==1.6','rome==0.0.3']
 
 setup(
     name='TicTacToe',
-    version='0.0.2',
+    version='0.0.4',
     description='TicTacToe',
     author='Erik Dominguez',
     author_email='erik.dominguez1003@gmail.com',
