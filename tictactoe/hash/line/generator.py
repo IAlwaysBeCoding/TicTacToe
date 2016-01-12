@@ -46,9 +46,7 @@ class LineStateGenerator(object):
                     'Invalid type:{} for {}.An int must be passed'.format(type(player),
                                                                           PLAYERS[player]))
 
-
         length = sum([int(player_0), int(player_1) ,int(player_2)])
-
         if length != self._length:
             raise ValueError(
                 'Current line length: {}. Line length must be :{}'.format(length,self._length))

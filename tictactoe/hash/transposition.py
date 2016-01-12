@@ -10,15 +10,11 @@ class HashTable(object):
             raise TypeError(
                 'table is not a valid dictionary instance.')
 
-
         for maybe_hashable in table:
             self.verify_hashable(hashable=table[maybe_hashable])
-
         self.table = table
 
-
     def __getitem__(self,key):
-
         return self.get(hash=key,silent=False)
 
     def __setitem__(self,key,hashable):
@@ -30,20 +26,16 @@ class HashTable(object):
 
         self.table[key] = hashable
 
-
     def __delitem__(self,key):
-
         return self.delete(hash=key,silent=False)
 
     def get(self,hash,silent=True):
-
         if silent:
             return self._table.get(hash,None)
 
         return self.table[hash]
 
     def delete(self,hash,silent=True):
-
         hashable = self.get(hash,silent)
         if hashable is None:
             return hashable
@@ -53,7 +45,6 @@ class HashTable(object):
         return True
 
     def add(self,hashable,silent=True):
-
         self.verify_hashable(hashable)
         self.table[hashable.hash] = hashable
 

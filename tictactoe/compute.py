@@ -8,6 +8,7 @@ from tictactoe.verification import (verify_player, verify_hash, verify_game_mode
                                     verify_cell)
 
 
+
 def player_combinations(player_0,player_1,player_2):
 
     for player in [player_0,player_1,player_2]:
@@ -72,8 +73,7 @@ def get_all_possible_lines():
 
 def new_game_hash(sum_cells=False,mode=TTT_3_IN_A_ROW):
 
-    verify_game_mode(game_mode=mode)
-    grid = [compute_hash(cell=c, player=FREE_SPACE,mode=TTT_3_IN_A_ROW) for c in xrange(1, 10, 1)]
+    grid = compute_all_hash_moves(player=FREE_SPACE,mode=mode)
     return sum(grid) if sum_cells else grid
 
 
