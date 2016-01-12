@@ -2,7 +2,7 @@
 import weakref
 
 from tictactoe.compute      import compute_hash
-from tictactoe.errors       import InvalidHash, InvalidCell
+from tictactoe.errors       import TicTacToeException
 from tictactoe.hash         import Hashable
 from tictactoe.settings     import (FREE_SPACE, GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW,
                                     TTT_5_IN_A_ROW)
@@ -56,7 +56,7 @@ class Cell(Hashable):
     @staticmethod
     def validate_binary(binary):
         if binary.count('1') != 1:
-            raise InvalidCell(
+            raise TicTacToeException(
                 'Binary:{} is an invalid Cell. Only a single '\
                 '1 can be found in the binary'.format(binary))
 
@@ -78,7 +78,7 @@ class Cell(Hashable):
     @classmethod
     def from_hash(cls,hash):
         if not isinstance(hash,(long,int)):
-            raise InvalidHash('A {} type was passed to hash. Only '
+            raise TicTacToeException('A {} type was passed to hash. Only '
                               'an long or an int type is acceptable'.format(type(hash)))
 
         previous_cell = cls._Hashes.get(hash,None)

@@ -2,42 +2,15 @@
 class TicTacToeException(Exception):
     pass
 
-class TicTacToeBoardException(TicTacToeException):
+class TicTacToeHashException(TicTacToeException):
     pass
 
-class InvalidCellNumber(TicTacToeBoardException):
+class TicTacToeGridException(TicTacToeHashException):
     pass
 
-class InvalidTotalMoves(TicTacToeBoardException):
+class IncompatibleGrid(TicTacToeGridException):
     pass
 
-class UnknownCellOwner(TicTacToeBoardException):
+class CellIsTaken(TicTacToeGridException):
     pass
 
-class CellIsTaken(TicTacToeBoardException):
-    pass
-
-class InvalidPlayer(TicTacToeBoardException):
-    pass
-
-class InvalidBinary(TicTacToeException):
-    pass
-
-class InvalidCell(TicTacToeException):
-    pass
-class InvalidGrid(TicTacToeException):
-    pass
-class IncompatibleGrid(TicTacToeException):
-    pass
-
-class InvalidMove(TicTacToeException):
-    pass
-class InvalidHash(TicTacToeException):
-    pass
-class InvalidBinaryMode(TicTacToeException):
-    pass
-class InvalidHashMode(TicTacToeException):
-    pass
-
-class InvalidLine(TicTacToeException):
-    pass

@@ -3,8 +3,8 @@ from itertools import chain
 
 from tictactoe.compute            import (compute_hash, compute_all_hash_moves, new_game_hash,
                                           decompose_grid_hash)
-from tictactoe.errors             import (InvalidHash, InvalidGrid, InvalidMove,
-                                         IncompatibleGrid, CellIsTaken)
+from tictactoe.errors             import (TicTacToeException, TicTacToeHashException, IncompatibleGrid,
+                                          CellIsTaken)
 from tictactoe.hash               import Hashable
 from tictactoe.hash.cell          import Cell, Cell4, Cell5
 from tictactoe.hash.move          import Move, Move4, Move5
@@ -149,7 +149,7 @@ class Grid(Hashable):
             player, cell = self._hash_map[hash]
 
         except KeyError:
-            raise InvalidHash(
+            raise TicTacToeException(
                 'An invalid hash:{} that contained no valid' \
                 'cell number and player was passed to Grid.'.format(hash))
 
@@ -165,7 +165,7 @@ class Grid(Hashable):
             player_2_cells = len(self.cells_taken(player = PLAYER_2))
 
             if (player_1_cells != player_2_cells) and (player_1_cells - 1 != player_2_cells):
-                raise InvalidGrid(
+                raise TicTacToeHashException(
                     'Invalid grid setup, Player1 has {} moves while ' \
                     'Player2 has {} moves.Grid is not a valid '\
                     'Tic Tac Toe grid'.format(player_1_cells,player_2_cells))
@@ -173,7 +173,7 @@ class Grid(Hashable):
     def apply_grid(self,grid,backwards=False):
 
         if not isinstance(grid,Grid):
-            raise InvalidGrid(
+            raise TicTacToeHashException(
                 'grid is not a valid Grid instance. Instead a {}' \
                 'instance was passed.Cannot apply Grid'.format(type(grid)))
 
@@ -200,7 +200,7 @@ class Grid(Hashable):
     def apply_move(self,move):
 
         if not isinstance(move,self.MOVE_KLASS):
-            raise InvalidMove(
+            raise TicTacToeHashException(
                 'move is not a valid Move instance. Instead a {}' \
                 'instance was passed.Cannot apply Move'.format(type(move)))
 
