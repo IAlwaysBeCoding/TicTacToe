@@ -2,12 +2,12 @@
 
 from rome import Roman
 
+from tictactoe.compute         import player_combinations
 from tictactoe.hash.line       import PLAYER_MAP, generate_player_keys, generate_combinations
 from tictactoe.hash.line.state import LineState
 from tictactoe.settings        import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
                                       TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
-from tictactoe.utils           import (player_combinations,verify_player, verify_real_player,
-                                      verify_game_mode)
+from tictactoe.verification    import verify_player, verify_real_player, verify_game_mode
 
 
 
@@ -15,7 +15,7 @@ class LineStateGenerator(object):
 
     def __init__(self,game_mode=TTT_3_IN_A_ROW):
 
-        verify_game_mode(mode=game_mode)
+        verify_game_mode(game_mode=game_mode)
         self._mode = GAME_MODES[game_mode]['LINE']
         self._length  = MODES[self.mode]['length']
 
@@ -53,12 +53,12 @@ class LineStateGenerator(object):
             raise ValueError(
                 'Current line length: {}. Line length must be :{}'.format(length,self._length))
 
-        return '{}{}/{}{}/{}{}'.format(Roman(player_0) if int(player_0) != 0 else '_',
-                                     MARKS[FREE_SPACE],
-                                     Roman(player_1) if int(player_1) != 0 else '_',
+        return '{}:{}/{}:{}/{}:{}'.format(MARKS[FREE_SPACE],
+                                     Roman(player_0) if int(player_0) != 0 else '',
                                      MARKS[PLAYER_1],
-                                     Roman(player_2) if int(player_2) != 0 else '_',
-                                     MARKS[PLAYER_2])
+                                     Roman(player_1) if int(player_1) != 0 else '',
+                                     MARKS[PLAYER_2],
+                                     Roman(player_2) if int(player_2) != 0 else '')
 
     def create_line_state(self,player_0,player_1,player_2):
 
@@ -91,12 +91,12 @@ class LineStateGenerator(object):
         return lines
 
     def blocked_states(self,player):
-        verify_player(player=player)
+        verify_real_player(player=player)
 
         lines = []
         opponent = PLAYER_1 if player == PLAYER_1 else PLAYER_2
 
-        for i in xrange(2,self.length,1):
+        for i in xrange(1,self.length,1):
 
             players = generate_player_keys()
             fill_players = dict(PLAYER_MAP)
@@ -106,7 +106,9 @@ class LineStateGenerator(object):
             for raw_combination in generate_combinations(fill_players.keys(),self.length-i):
                 raw_combination[opponent] + 1
                 raw_combination[player]  = i
-                lines.append(self.create_line_state(*raw_combination))
+
+                if (raw_combination[FREE_SPACE] + raw_combination[player] != self.length):
+                    lines.append(self.create_line_state(*raw_combination))
 
         return lines
 

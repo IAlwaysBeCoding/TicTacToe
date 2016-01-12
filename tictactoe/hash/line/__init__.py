@@ -4,10 +4,10 @@ from itertools import  combinations_with_replacement
 
 from rome import Roman
 
-from tictactoe.settings  import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
-                                 TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
-from tictactoe.utils     import (player_combinations,verify_player, verify_real_player,
-                                 verify_game_mode)
+from tictactoe.compute      import player_combinations
+from tictactoe.settings     import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
+                                   TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
+from tictactoe.verification import verify_player, verify_real_player, verify_game_mode
 
 
 

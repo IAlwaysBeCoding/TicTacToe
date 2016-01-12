@@ -1,16 +1,46 @@
 
+from itertools import chain
 
-from tictactoe.errors     import (InvalidHash, InvalidGrid, InvalidMove,
-                                  IncompatibleGrid, CellIsTaken)
-from tictactoe.hash       import Hashable, CELL_HASH_MAP
-from tictactoe.hash.cell  import Cell, Cell4, Cell5
-from tictactoe.hash.move  import Move, Move4, Move5
-from tictactoe.hash.state import GridState, GridState4, GridState5
-from tictactoe.settings   import (FREE_SPACE, PLAYER_1, PLAYER_2, GAME_MODES,
-                                 TTT_3_IN_A_ROW, TTT_4_IN_A_ROW, TTT_5_IN_A_ROW)
-from tictactoe.utils      import (compute_hash, verify_cell, verify_player,
-                                  verify_grid, verify_binary, verify_hash,
-                                  new_game_hash, decompose_grid_hash)
+from tictactoe.compute            import (compute_hash, compute_all_hash_moves, new_game_hash,
+                                          decompose_grid_hash)
+from tictactoe.errors             import (InvalidHash, InvalidGrid, InvalidMove,
+                                         IncompatibleGrid, CellIsTaken)
+from tictactoe.hash               import Hashable
+from tictactoe.hash.cell          import Cell, Cell4, Cell5
+from tictactoe.hash.move          import Move, Move4, Move5
+from tictactoe.hash.state         import GridState, GridState4, GridState5
+from tictactoe.hash.transposition import HashTable
+from tictactoe.settings           import (FREE_SPACE, PLAYER_1, PLAYER_2, GAME_MODES,
+                                         TTT_3_IN_A_ROW, TTT_4_IN_A_ROW, TTT_5_IN_A_ROW)
+from tictactoe.verification       import (verify_cell, verify_player, verify_grid, verify_binary,
+                                          verify_hash, verify_game_mode)
+
+
+
+def create_player_hash_table(mode=TTT_3_IN_A_ROW):
+    verify_game_mode(game_mode=mode)
+
+    cell_klass = {
+        TTT_3_IN_A_ROW : Cell,
+        TTT_4_IN_A_ROW : Cell4,
+        TTT_5_IN_A_ROW : Cell5
+    }
+
+    players = (FREE_SPACE, PLAYER_1, PLAYER_2)
+    player_hashes = lambda players,m : [compute_all_hash_moves(player=p,mode=m) for p in players]
+
+    hashes = list(chain.from_iterable(player_hashes(players,mode)))
+
+    player_hash_table = dict([(h,cell_klass[mode].from_hash(hash=h)) for h in hashes])
+
+    return HashTable(table=player_hash_table)
+
+
+CELL_HASH_TABLE = {
+    TTT_3_IN_A_ROW : create_player_hash_table(mode=TTT_3_IN_A_ROW),
+    TTT_4_IN_A_ROW : create_player_hash_table(mode=TTT_4_IN_A_ROW),
+    TTT_5_IN_A_ROW : create_player_hash_table(mode=TTT_5_IN_A_ROW)
+}
 
 
 class Grid(Hashable):
@@ -32,7 +62,7 @@ class Grid(Hashable):
 
         self._hash  = hash
         self._binary = None
-        self._hash_map = CELL_HASH_MAP
+        self._hash_map = CELL_HASH_TABLE[self.MODE]
         self._cells = [self.CELL_KLASS.from_hash(hash=h)
                        for h in decompose_grid_hash(hash=self._hash,mode=self.MODE)]
 
@@ -189,8 +219,6 @@ class Grid(Hashable):
             cells[move.number-1] = move
 
             return type(self)(hash=sum([c.hash for c in cells]))
-
-
 
 class Grid4(Grid):
 

@@ -1,21 +1,6 @@
 
 import abc
 
-from tictactoe.settings   import FREE_SPACE, PLAYER_1, PLAYER_2
-from tictactoe.utils      import compute_all_hash_moves , get_all_possible_lines
-
-
-CELL_HASHES = [compute_all_hash_moves(player=p) for p in (FREE_SPACE, PLAYER_1, PLAYER_2)]
-
-CELL_HASH_MAP = dict([ (hash, (player, cell+1))
-                for player, hash_list in enumerate(CELL_HASHES)
-                for cell, hash        in enumerate(hash_list) ])
-
-
-ALL_LINES = [line for line in get_all_possible_lines()]
-
-
-
 class Hashable(object):
 
     __metaclass__ = abc.ABCMeta

@@ -1,11 +1,12 @@
 
 import weakref
 
-from tictactoe.errors    import InvalidHash, InvalidCell
-from tictactoe.hash      import Hashable
-from tictactoe.settings  import (FREE_SPACE, GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW,
-                                 TTT_5_IN_A_ROW)
-from tictactoe.utils     import verify_player, verify_cell, verify_binary, compute_hash
+from tictactoe.compute      import compute_hash
+from tictactoe.errors       import InvalidHash, InvalidCell
+from tictactoe.hash         import Hashable
+from tictactoe.settings     import (FREE_SPACE, GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW,
+                                    TTT_5_IN_A_ROW)
+from tictactoe.verification import verify_player, verify_cell, verify_binary
 
 
 def create_new_cell(cell_cls,number,player):
@@ -130,7 +131,6 @@ class Cell(Hashable):
     @player.setter
     def player(self,value):
         pass
-
 
 class Cell4(Cell):
 

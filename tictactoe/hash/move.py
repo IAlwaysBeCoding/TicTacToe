@@ -21,7 +21,6 @@ class Move(Cell):
         previous_move = cls._Hashes.get(hash,None)
         return previous_move if previous_move else super(Move,cls).from_hash(hash=hash)
 
-
 class Move4(Cell):
 
     _Refs   = weakref.WeakValueDictionary()
@@ -38,7 +37,6 @@ class Move4(Cell):
     def from_hash(cls,hash):
         previous_move = cls._Hashes.get(hash,None)
         return previous_move if previous_move else super(Move4,cls).from_hash(hash=hash)
-
 
 class Move5(Cell):
 

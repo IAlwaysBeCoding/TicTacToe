@@ -1,10 +1,9 @@
 
 from funcy import  memoize
 
-from tictactoe.hash      import Hashable
-from tictactoe.settings  import (GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW,
-                                 TTT_5_IN_A_ROW)
-from tictactoe.utils     import verify_binary, verify_hash
+from tictactoe.hash         import Hashable
+from tictactoe.settings     import GAME_MODES, TTT_3_IN_A_ROW, TTT_4_IN_A_ROW, TTT_5_IN_A_ROW
+from tictactoe.verification import verify_binary, verify_hash
 
 
 class GridState(Hashable):
@@ -57,7 +56,6 @@ class GridState(Hashable):
     @memoize
     def get_free_cells(self):
        return [i+1 for i,b in enumerate(reversed(self.binary)) if b == '0']
-
 
 class GridState4(GridState):
 

@@ -5,9 +5,9 @@ PLAYER_1   = 1
 PLAYER_2   = 2
 
 MARKS = {
-    FREE_SPACE : 'P0',
-    PLAYER_1   : 'P1',
-    PLAYER_2   : 'P2'
+    FREE_SPACE : '[]',
+    PLAYER_1   : 'X',
+    PLAYER_2   : 'O'
 }
 
 PLAYERS    = {
@@ -89,4 +89,10 @@ GAME_MODES = {
     }
 }
 
+
+def available_modes():
+
+    mode_text  = "{} with a mode value of {} with a bit size length of {}"
+    modes = [mode_text.format(MODES[m]['mode'],m,MODES[m]['length']) for m in MODES]
+    return " ,or ".join(modes)
 

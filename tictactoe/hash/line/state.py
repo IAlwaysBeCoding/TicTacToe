@@ -1,13 +1,12 @@
 
 
-from tictactoe.settings  import FREE_SPACE, PLAYER_1, PLAYER_2
-from tictactoe.utils     import verify_player
-
+from tictactoe.settings     import FREE_SPACE, PLAYER_1, PLAYER_2, MODES, LINE
+from tictactoe.verification import verify_player
 
 
 class LineState(object):
 
-    def __init__(self,name,permutations,length=3):
+    def __init__(self,name,permutations,length=MODES[LINE]['length']):
 
         self._name = name
 
