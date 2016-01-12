@@ -2,6 +2,7 @@
 
 from itertools import  permutations, chain
 
+from tictactoe.errors       import TicTacToeException
 from tictactoe.settings     import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS,
                                     TTT_3_IN_A_ROW, MODES, GAME_MODES)
 from tictactoe.verification import (verify_player, verify_hash, verify_game_mode,
@@ -17,7 +18,7 @@ def player_combinations(player_0,player_1,player_2):
             continue
 
         if not isinstance(player,int):
-            raise TypeError(
+            raise TicTacToeException(
                 'Invalid type:{} for {}.An int must be passed'.format(type(player),PLAYERS[player]))
 
 

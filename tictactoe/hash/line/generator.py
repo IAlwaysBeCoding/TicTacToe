@@ -3,6 +3,7 @@
 from rome import Roman
 
 from tictactoe.compute         import player_combinations
+from tictactoe.errors          import TicTacToeException
 from tictactoe.hash.line       import PLAYER_MAP, generate_player_keys, generate_combinations
 from tictactoe.hash.line.state import LineState
 from tictactoe.settings        import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
@@ -42,13 +43,13 @@ class LineStateGenerator(object):
                 continue
 
             if not isinstance(player,int):
-                raise TypeError(
+                raise TicTacToeException(
                     'Invalid type:{} for {}.An int must be passed'.format(type(player),
                                                                           PLAYERS[player]))
 
         length = sum([int(player_0), int(player_1) ,int(player_2)])
         if length != self._length:
-            raise ValueError(
+            raise TicTacToeException(
                 'Current line length: {}. Line length must be :{}'.format(length,self._length))
 
         return '{}:{}/{}:{}/{}:{}'.format(MARKS[FREE_SPACE],

@@ -5,6 +5,7 @@ from itertools import  combinations_with_replacement
 from rome import Roman
 
 from tictactoe.compute      import player_combinations
+from tictactoe.errors       import TicTacToeException
 from tictactoe.settings     import (FREE_SPACE, PLAYER_1, PLAYER_2, PLAYERS ,
                                    TTT_3_IN_A_ROW, MODES, GAME_MODES, MARKS)
 from tictactoe.verification import verify_player, verify_real_player, verify_game_mode
@@ -27,7 +28,7 @@ def generate_combinations(players_to_combine,length):
 
 
     if not isinstance(players_to_combine,(list,tuple)):
-        raise TypeError(
+        raise TicTacToeException(
                 'players_to_combine  needs to be a list with 1 or 2 '\
                 'items : {} as player_0 , {} as player_1 and ' \
                 '{} as player_2 .No other items besides '\

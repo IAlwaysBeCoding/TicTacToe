@@ -44,7 +44,7 @@ def verify_cell(cell,mode=TTT_3_IN_A_ROW):
     try:
         mode = GAME_MODES[mode]['GRID_STATE']
     except KeyError:
-        raise ValueError(
+        raise TicTacToeException(
             'Invalid game mode:{} . Only valid game modes are :{}'.format(*GAME_MODES.keys()))
 
     else:
@@ -64,7 +64,7 @@ def verify_grid(grid,mode=TTT_3_IN_A_ROW):
         length = MODES[m]['length']
 
     except KeyError:
-        raise TypeError(
+        raise TicTacToeException(
             'Invalid game mode:{}. Only valid game modes are :{}'.format(mode,*GAME_MODES))
 
     else:

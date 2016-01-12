@@ -1,13 +1,13 @@
 
-
-from tictactoe.hash import Hashable
+from tictactoe.errors import TicTacToeException
+from tictactoe.hash   import Hashable
 
 class HashTable(object):
 
     def __init__(self,table={}):
 
         if not isinstance(table, dict):
-            raise TypeError(
+            raise TicTacToeException(
                 'table is not a valid dictionary instance.')
 
         for maybe_hashable in table:
@@ -21,7 +21,7 @@ class HashTable(object):
         self.verify_hashable(hashable)
 
         if key != hashable.hash:
-            raise ValueError(
+            raise TicTacToeException(
                 'Key:{} is not the same hash as hashable hash:{}'.format(key,hashable.hash))
 
         self.table[key] = hashable
@@ -52,7 +52,7 @@ class HashTable(object):
 
     def verify_hashable(self,hashable):
         if not isinstance(hashable,Hashable):
-            raise TypeError(
+            raise TicTacToeException(
                 'hashable is not a valid Hashable instance. Instead a : ' \
                 '{} type was found'.format(type(hashable)))
 

@@ -1,5 +1,5 @@
 
-
+from tictactoe.errors       import TicTacToeException
 from tictactoe.settings     import FREE_SPACE, PLAYER_1, PLAYER_2, MODES, LINE
 from tictactoe.verification import verify_player
 
@@ -86,7 +86,7 @@ class LineState(object):
     def validate_permutations(self):
 
         if not isinstance(self.permutations,(list,tuple)):
-            raise TypeError(
+            raise TicTacToeException(
                 'Invalid permutation type:{} . A list or tuple must ' \
                 'be passed containing the different line permutations ' \
                 'with only possible values {} for Free Space, {} for ' \
@@ -96,13 +96,13 @@ class LineState(object):
                                                        PLAYER_2))
 
         if len(self.permutations) == 0:
-            raise ValueError(
+            raise TicTacToeException(
                 'permutations is an empty list/tuple. It contains no permutations')
 
         invalids = filter(lambda p : len(p) != self.length, self.permutations)
 
         if invalids:
-            raise ValueError(
+            raise TicTacToeException(
                 'Found invalid permutation(s):{} .Line length must be atleast:{} '\
                 'for each permutation'.format(invalids,self.length))
 
