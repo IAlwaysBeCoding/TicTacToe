@@ -1,7 +1,0 @@
-build/
-dist/
-*.pyc
-*.swn
-*.swo
-*.swp
-.ropeproject
