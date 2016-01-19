@@ -1,3 +1,10 @@
+"""
+Grid is the the main representation of a Tic Tac Toe game containing all the cells of the game.
+===
+
+
+"""
+
 
 from itertools import chain
 
